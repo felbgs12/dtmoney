@@ -1,9 +1,9 @@
-import { Container, TransactionTypeContainer, RadioBox } from './styles';
+import { FormEvent, useState } from 'react';
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 import Modal from 'react-modal';
-import { useState } from 'react';
+import { Container, TransactionTypeContainer, RadioBox } from './styles';
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -15,6 +15,15 @@ export function NewTransactionModal({
   onRequestClose,
 }: NewTransactionModalProps) {
   const [type, setType] = useState('deposit');
+  const [title, setTitle] = useState('');
+  const [value, setValue] = useState(0);
+  const [category, setCategory] = useState('');
+
+  function handleCreateNewTransaction(event: FormEvent) {
+    event.preventDefault();
+
+    console.log({ title, value, type, category });
+  }
 
   return (
     <Modal
@@ -31,12 +40,21 @@ export function NewTransactionModal({
         <img src={closeImg} alt='Close modal' />
       </button>
 
-      <Container>
+      <Container onSubmit={handleCreateNewTransaction}>
         <h2>Register transaction</h2>
 
-        <input placeholder='Title' />
+        <input
+          placeholder='Title'
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
 
-        <input type='number' placeholder='Value' />
+        <input
+          type='number'
+          placeholder='Value'
+          value={value}
+          onChange={event => setValue(Number(event.target.value))}
+        />
 
         <TransactionTypeContainer>
           <RadioBox
@@ -60,7 +78,11 @@ export function NewTransactionModal({
           </RadioBox>
         </TransactionTypeContainer>
 
-        <input placeholder='Categorie' />
+        <input
+          placeholder='Category'
+          value={category}
+          onChange={event => setCategory(event.target.value)}
+        />
 
         <button type='submit'>Register</button>
       </Container>
